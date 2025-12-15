@@ -8,38 +8,38 @@ const path = require("path");
 dotenv.config();
 
 // Import configurations
-const connectDB = require("./src/config/database");
-const initializeWebSocket = require("./src/config/websocket");
+const connectDB = require("./config/database");
+const initializeWebSocket = require("./config/websocket");
 
 // Import middleware
-const corsMiddleware = require("./src/middleware/cors");
+const corsMiddleware = require("./middleware/cors");
 const {
   apiLimiter,
   authLimiter,
   canvasLimiter,
   uploadLimiter,
-} = require("./src/middleware/rateLimiter");
-const { requestLogger } = require("./src/middleware/logger");
-const errorHandler = require("./src/middleware/errorHandler");
-const { handleMulterError } = require("./src/middleware/upload");
+} = require("./middleware/rateLimiter");
+const { requestLogger } = require("./middleware/logger");
+const errorHandler = require("./middleware/errorHandler");
+const { handleMulterError } = require("./middleware/upload");
 
 // Import routes
-const authRoutes = require("./src/routes/authRoutes");
-const projectRoutes = require("./src/routes/projectRoutes");
-const canvasRoutes = require("./src/routes/canvasRoutes");
-const collaborationRoutes = require("./src/routes/collaborationRoutes");
-const commentRoutes = require("./src/routes/commentRoutes");
-const userRoutes = require("./src/routes/userRoutes");
-const templateRoutes = require("./src/routes/templateRoutes");
-const notificationRoutes = require("./src/routes/notificationRoutes");
+const authRoutes = require("./routes/authRoutes");
+const projectRoutes = require("./routes/projectRoutes");
+const canvasRoutes = require("./routes/canvasRoutes");
+const collaborationRoutes = require("./routes/collaborationRoutes");
+const commentRoutes = require("./routes/commentRoutes");
+const userRoutes = require("./routes/userRoutes");
+const templateRoutes = require("./routes/templateRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 // Import WebSocket handlers
-const socketHandlers = require("./src/websocket/handlers");
-const EVENTS = require("./src/websocket/events");
+const socketHandlers = require("./websocket/handlers");
+const EVENTS = require("./websocket/events");
 
 // Import utilities
-const logger = require("./src/utils/logger");
-const { formatBytes } = require("./src/utils/helpers");
+const logger = require("./utils/logger");
+const { formatBytes } = require("./utils/helpers");
 
 // Initialize Express app
 const app = express();
@@ -82,7 +82,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // Static files - Serve uploaded files
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "../../uploads")));
 
 // Health check endpoint
 app.get("/health", (req, res) => {
@@ -100,6 +100,7 @@ app.get("/", (req, res) => {
   res.json({
     success: true,
     message: "Eraser.io Clone API",
+    version: "1.0.0",
     status: "active",
     endpoints: {
       health: "/health",
@@ -115,7 +116,7 @@ app.get("/", (req, res) => {
     documentation: "/api/docs",
     websocket: {
       enabled: true,
-      endpoint: process.env.CLIENT_URL || "http://localhost:5174",
+      endpoint: process.env.CLIENT_URL || "http://localhost:5173",
     },
   });
 });
@@ -146,41 +147,37 @@ app.use("/api/notifications", notificationRoutes);
 // Multer error handling middleware
 app.use(handleMulterError);
 
-// Helper to bind WebSocket handlers after Socket.io is initialized
-const bindSocketHandlers = (ioInstance) => {
-  ioInstance.on(EVENTS.CONNECTION, (socket) => {
-    const userId = socket.user?.id;
-    const userName = socket.user?.name;
+// WebSocket connection handling
+io.on(EVENTS.CONNECTION, (socket) => {
+  const userId = socket.user?.id;
+  const userName = socket.user?.name;
 
+  logger.info(`User connected: ${userName} (${userId}) - Socket: ${socket.id}`);
+
+  // Initialize socket handlers
+  socketHandlers(io, socket);
+
+  // Handle socket errors
+  socket.on(EVENTS.ERROR, (error) => {
+    logger.error(`Socket error for ${socket.id}:`, error);
+  });
+
+  // Handle disconnection
+  socket.on(EVENTS.DISCONNECT, (reason) => {
     logger.info(
-      `User connected: ${userName} (${userId}) - Socket: ${socket.id}`
+      `User disconnected: ${userName} (${userId}) - Reason: ${reason}`
     );
-
-    // Initialize socket handlers
-    socketHandlers(ioInstance, socket);
-
-    // Handle socket errors
-    socket.on(EVENTS.ERROR, (error) => {
-      logger.error(`Socket error for ${socket.id}:`, error);
-    });
-
-    // Handle disconnection
-    socket.on(EVENTS.DISCONNECT, (reason) => {
-      logger.info(
-        `User disconnected: ${userName} (${userId}) - Reason: ${reason}`
-      );
-    });
   });
+});
 
-  // WebSocket error handling
-  ioInstance.engine.on("connection_error", (err) => {
-    logger.error("WebSocket connection error:", {
-      code: err.code,
-      message: err.message,
-      context: err.context,
-    });
+// WebSocket error handling
+io.engine.on("connection_error", (err) => {
+  logger.error("WebSocket connection error:", {
+    code: err.code,
+    message: err.message,
+    context: err.context,
   });
-};
+});
 
 // 404 handler - Must be after all routes
 app.use((req, res) => {
@@ -196,17 +193,12 @@ app.use((req, res) => {
 // Global Error Handler - Must be last
 app.use(errorHandler);
 
-// Start server using Express' listen (no manual http.createServer)
+// Start server
 const PORT = process.env.PORT || 5000;
 const HOST = process.env.HOST || "0.0.0.0";
 
-const server = app.listen(PORT, HOST, () => {
-  // Initialize Socket.io once server is up
-  io = initializeWebSocket(server);
-  app.set("io", io);
-  bindSocketHandlers(io);
-
-  console.log(`Server running on port http://localhost:${PORT}`);
+httpServer.listen(PORT, HOST, () => {
+  logger.info(`Server running on port https://localhost:${PORT}`);
 });
 
 // Handle unhandled promise rejections
@@ -216,7 +208,7 @@ process.on("unhandledRejection", (err) => {
   if (process.env.NODE_ENV === "production") {
     // In production, gracefully shutdown
     logger.error("Shutting down server due to unhandled rejection...");
-    server.close(() => {
+    httpServer.close(() => {
       process.exit(1);
     });
   }
@@ -236,7 +228,7 @@ process.on("uncaughtException", (err) => {
 // Handle SIGTERM signal (graceful shutdown)
 process.on("SIGTERM", () => {
   logger.info("SIGTERM signal received: closing HTTP server");
-  server.close(() => {
+  httpServer.close(() => {
     logger.info("HTTP server closed");
     process.exit(0);
   });
@@ -245,7 +237,7 @@ process.on("SIGTERM", () => {
 // Handle SIGINT signal (Ctrl+C)
 process.on("SIGINT", () => {
   logger.info("SIGINT signal received: closing HTTP server");
-  server.close(() => {
+  httpServer.close(() => {
     logger.info("HTTP server closed");
     process.exit(0);
   });
@@ -253,9 +245,9 @@ process.on("SIGINT", () => {
 
 // Periodic cleanup tasks (run every hour)
 if (process.env.NODE_ENV === "production") {
-  const storageService = require("./src/services/storageService");
-  const canvasService = require("./src/services/canvasService");
-  const notificationService = require("./src/services/notificationService");
+  const storageService = require("./services/storageService");
+  const canvasService = require("./services/canvasService");
+  const notificationService = require("./services/notificationService");
 
   setInterval(async () => {
     try {
@@ -284,4 +276,4 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Export for testing
-module.exports = { app, server, io };
+module.exports = { app, httpServer, io };
