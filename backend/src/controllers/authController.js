@@ -23,7 +23,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     sameSite: "strict",
   };
 
-  res
+  return res
     .status(statusCode)
     .cookie("token", token, options)
     .json({
@@ -39,9 +39,6 @@ const sendTokenResponse = (user, statusCode, res) => {
     });
 };
 
-// @desc    Register user
-// @route   POST /api/auth/register
-// @access  Public
 exports.register = asyncHandler(async (req, res, next) => {
   const { name, email, password } = req.body;
 

@@ -1,6 +1,6 @@
 # eraser
 
-Author Mohammed Umar Khan
+Author Mohammed Umar Khan 
 
 # Eraser.io Clone - Collaborative Diagramming Tool
 
@@ -391,7 +391,7 @@ Make sure to set these in your hosting platform:
 
 **Mohammed Umar Khan**
 
-- GitHub: [@yourusername](https://github.com/yourusername)
+- GitHub: [https://github.com/Umarkhan803]
 - Email: mohammedumarkhan803@gmail.com
 
 ## 🙏 Acknowledgments
@@ -402,7 +402,7 @@ Make sure to set these in your hosting platform:
 
 ## 📞 Support
 
-For support, email your.email@example.com or open an issue in the repository.
+For support, email mohammedumarkhan803@gmail.com or open an issue in the repository.
 
 ---
 

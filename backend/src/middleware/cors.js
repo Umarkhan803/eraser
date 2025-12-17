@@ -12,6 +12,11 @@ const corsOptions = {
     // Allow requests with no origin (mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
 
+    // In development, allow any origin for easier testing
+    if (process.env.NODE_ENV !== "production") {
+      return callback(null, true);
+    }
+
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {

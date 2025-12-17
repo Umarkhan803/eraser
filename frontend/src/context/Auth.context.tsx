@@ -8,8 +8,8 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
-  error: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  message: string | null;
+  signUp: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   // const [userType, setUserType] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -43,13 +43,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     checkAuth();
   }, []);
 
-  // Define login and logout methods here to match AuthContextType requirements
-  const login = async (email: string, password: string) => {
+  // Define sign up and logout methods here to match AuthContextType requirements
+  const signUp = async (name: string, email: string, password: string) => {
     setLoading(true);
-    setError(null);
+    setMessage(null);
     try {
-      // Example POST to login endpoint
-      const response = await axios.post(`${proxyUrl}/auth/login`, {
+      // Example POST to sign up endpoint
+      const response = await axios.post(`${proxyUrl()}/api/auth/register`, {
+        name,
         email,
         password,
       });
@@ -59,13 +60,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setLoading(false);
         // Optionally store token if you use JWT, etc.
       } else {
-        setError(response.data.message || "Login failed");
+        setMessage(response.data.message || "Sign up failed");
         setIsAuthenticated(false);
         setUser(null);
         setLoading(false);
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed");
+      setMessage(err.response?.data?.message || "Sign up failed");
       setIsAuthenticated(false);
       setUser(null);
       setLoading(false);
@@ -76,7 +77,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Delete any stored auth tokens/cookies as needed
     setUser(null);
     setIsAuthenticated(false);
-    setError(null);
+    setMessage(null);
     setLoading(false);
     // Optionally make an API call to logout as well
   };
@@ -87,8 +88,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         user,
         isAuthenticated,
         loading,
-        error,
-        login,
+        message,
+        signUp,
         logout,
       }}
     >
@@ -96,7 +97,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     </AuthContext.Provider>
   );
 };
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
