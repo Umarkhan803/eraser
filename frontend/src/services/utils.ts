@@ -1,4 +1,4 @@
-export const proxyurl = () => {
+export const proxyUrl = () => {
   const envmode = process.env.NODE_ENV;
   if (envmode == "development") {
     // console.log(process.env.REACT_APP_PROXY_URI_DEV); //undefined

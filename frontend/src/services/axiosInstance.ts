@@ -1,8 +1,8 @@
-import { proxyurl } from "./utils";
+import { proxyUrl } from "./utils";
 import axios from "axios";
 const token: string | null = localStorage.getItem("token");
 const axiosInstance = axios.create({
-  baseURL: proxyurl(), // Replace with your API base URL
+  baseURL: proxyUrl(), // Replace with your API base URL
   timeout: 10000,
   headers: token ? { Authorization: `Bearer ${token}` } : {},
 });
