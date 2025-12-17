@@ -3,12 +3,12 @@ import axios from "axios";
 import { proxyUrl } from "../services/utils";
 import type { User } from "../types/Interface";
 import { getMe } from "../services/api";
+import toast from "react-hot-toast";
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
-  message: string | null;
   signUp: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
@@ -54,19 +54,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         email,
         password,
       });
-      if (response.data.success) {
-        setUser(response.data.data);
+
+      if (response.status === 201) {
+        setUser(response.data.user);
+        toast.success(response.data.message);
         setIsAuthenticated(true);
         setLoading(false);
         // Optionally store token if you use JWT, etc.
       } else {
-        setMessage(response.data.message || "Sign up failed");
+        toast.error(response.data.message || "Sign up failed");
         setIsAuthenticated(false);
         setUser(null);
         setLoading(false);
       }
     } catch (err: any) {
-      setMessage(err.response?.data?.message || "Sign up failed");
+      toast.error(err.response?.data?.message || "Sign up failed");
       setIsAuthenticated(false);
       setUser(null);
       setLoading(false);
@@ -88,7 +90,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         user,
         isAuthenticated,
         loading,
-        message,
+
         signUp,
         logout,
       }}

@@ -2,13 +2,12 @@ import { useState } from "react";
 import { useAuth } from "../context/Auth.context";
 
 const Home: React.FC = () => {
-  const { signUp, message } = useAuth();
-  const [name, setName] = useState("test");
-  const [email, setEmail] = useState("umarkhan803@gmail.com  ");
-  const [password, setPassword] = useState("test123");
+  const { signUp } = useAuth();
+  const [name, setName] = useState<string>("test");
+  const [email, setEmail] = useState<string>("umarkhan803@gmail.com  ");
+  const [password, setPassword] = useState<string>("test123");
   const handleLogin = () => {
     signUp(name, email, password);
-    console.log(message);
   };
   return (
     <>

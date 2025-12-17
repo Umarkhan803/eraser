@@ -11,7 +11,7 @@ const generateToken = (id) => {
 };
 
 // Send token response
-const sendTokenResponse = (user, statusCode, res) => {
+const sendTokenResponse = (user, statusCode, res, message) => {
   const token = generateToken(user._id);
 
   const options = {
@@ -28,6 +28,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     .cookie("token", token, options)
     .json({
       success: true,
+      message: message,
       token,
       user: {
         id: user._id,
@@ -58,7 +59,7 @@ exports.register = asyncHandler(async (req, res, next) => {
     password,
   });
 
-  sendTokenResponse(user, 201, res);
+  sendTokenResponse(user, 201, res, "User registered successfully");
 });
 
 // @desc    Login user
@@ -99,7 +100,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   user.lastLogin = Date.now();
   await user.save();
 
-  sendTokenResponse(user, 200, res);
+  sendTokenResponse(user, 200, res, "User logged in successfully");
 });
 
 // @desc    Logout user / clear cookie
@@ -147,6 +148,7 @@ exports.updateProfile = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: user,
+    message: "User profile updated successfully",
   });
 });
 
@@ -167,7 +169,7 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
   user.password = req.body.newPassword;
   await user.save();
 
-  sendTokenResponse(user, 200, res);
+  sendTokenResponse(user, 200, res, "User password updated successfully");
 });
 
 // @desc    Forgot password
@@ -237,7 +239,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   user.resetPasswordExpire = undefined;
   await user.save();
 
-  sendTokenResponse(user, 200, res);
+  sendTokenResponse(user, 200, res, "User password reset successfully");
 });
 
 // @desc    Verify email
