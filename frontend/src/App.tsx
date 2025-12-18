@@ -4,12 +4,16 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Editor from "./pages/Editor";
 import Auth from "./pages/Auth";
+import PrivetRoute from "./context/PrivetRoute";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+      </Routes>
+      <Routes>
+        <Route element={<PrivetRoute />} />
       </Routes>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />

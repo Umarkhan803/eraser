@@ -17,6 +17,7 @@ export default defineConfig([
     ],
     rules: {
       "no-unused-vars": "off",
+      allowConstantExport: "off",
       "@typescript-eslint/no-unused-vars": "off",
       "react-hooks/rules-of-hooks": "error",
     },
