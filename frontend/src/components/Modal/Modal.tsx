@@ -7,7 +7,9 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ children }) => {
   return (
     <StyledWrapper>
-      <div className="card">{children}</div>
+      <div className="flex flex-col items-center justify-center min-h-screen ">
+        <div className="card">{children}</div>
+      </div>
     </StyledWrapper>
   );
 };

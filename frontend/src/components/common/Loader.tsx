@@ -3,10 +3,12 @@ import styled from "styled-components";
 const Loader = () => {
   return (
     <StyledWrapper>
-      <div className="three-body">
-        <div className="three-body__dot" />
-        <div className="three-body__dot" />
-        <div className="three-body__dot" />
+      <div className="flex flex-col items-center justify-center min-h-screen ">
+        <div className="three-body">
+          <div className="three-body__dot" />
+          <div className="three-body__dot" />
+          <div className="three-body__dot" />
+        </div>
       </div>
     </StyledWrapper>
   );

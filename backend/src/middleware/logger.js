@@ -51,12 +51,12 @@ if (process.env.NODE_ENV !== "production") {
 
 // Request logging middleware
 const requestLogger = (req, res, next) => {
-  logger.info({
-    method: req.method,
-    url: req.url,
-    ip: req.ip,
-    userAgent: req.get("user-agent"),
-  });
+  // logger.info({
+  //   method: req.method,
+  //   url: req.url,
+  //   ip: req.ip,
+  //   userAgent: req.get("user-agent"),
+  // });
   next();
 };
 

@@ -20,6 +20,11 @@ export default defineConfig([
       allowConstantExport: "off",
       "@typescript-eslint/no-unused-vars": "off",
       "react-hooks/rules-of-hooks": "error",
+      "@typescript-eslint/no-explicit-any": "off",
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ],
     },
     languageOptions: {
       ecmaVersion: 2020,

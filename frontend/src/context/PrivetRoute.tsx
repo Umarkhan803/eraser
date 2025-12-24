@@ -1,24 +1,22 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "./Auth.context";
 import Loader from "../components/common/Loader";
+import "../styles/global.css";
 
 const PrivetRoute: React.FC = () => {
-  const location = useLocation();
   const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <div className="page-container">
-      {loading ? (
-        <Loader />
-      ) : isAuthenticated ? (
-        <div className={`page-container ${location.pathname}`}>
-          <Outlet />
-        </div>
-      ) : (
-        <div className="page-container">
-          <p>Unauthorized access</p>
-        </div>
-      )}
+      <Outlet />
     </div>
   );
 };

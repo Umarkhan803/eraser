@@ -78,7 +78,7 @@ app.use(cookieParser());
 
 // Request Logger Middleware
 if (process.env.NODE_ENV === "development") {
-  app.use(requestLogger);
+  // app.use(requestLogger);
 }
 
 // Static files - Serve uploaded files

@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { proxyUrl } from "../services/utils";
 import type { User } from "../types/Interface";
-import { getMe } from "../services/api";
+import { getMe, login as loginApi } from "../services/api";
 import toast from "react-hot-toast";
 
 interface AuthContextType {
@@ -11,6 +11,7 @@ interface AuthContextType {
   loading: boolean;
   message: string | null;
   signUp: (name: string, email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -76,6 +77,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const login = async (email: string, password: string) => {
+    setLoading(true);
+    setMessage(null);
+    try {
+      const response = await loginApi({ email, password } as User);
+
+      if (response.data.success) {
+        // After successful login, get user data
+        const meResponse = await getMe();
+        if (meResponse.data.success) {
+          setUser(meResponse.data.data);
+          setIsAuthenticated(true);
+          toast.success(response.data.message || "Login successful");
+        }
+        setLoading(false);
+      } else {
+        toast.error(response.data.message || "Login failed");
+        setIsAuthenticated(false);
+        setUser(null);
+        setLoading(false);
+      }
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Login failed");
+      setIsAuthenticated(false);
+      setUser(null);
+      setLoading(false);
+    }
+  };
+
   const logout = () => {
     // Delete any stored auth tokens/cookies as needed
     setUser(null);
@@ -93,6 +123,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         message,
         loading,
         signUp,
+        login,
         logout,
       }}
     >
