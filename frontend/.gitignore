@@ -10,7 +10,8 @@ lerna-debug.log*
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # NOTES
-erasour.io.txt
+erasour.io.txt 
+MISSING_FILES_SUMMARY.md
 # Runtime data
 pids
 *.pid

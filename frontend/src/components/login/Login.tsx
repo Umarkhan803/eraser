@@ -1,245 +1,312 @@
+import React from "react";
 import styled from "styled-components";
 import { useAuth } from "../../context/Auth.context";
-import { useState } from "react";
+import "../../styles/global.css";
 import { Link } from "react-router-dom";
-
-const Login = () => {
+import { Eye, LockKeyhole, LogIn, Mail } from "lucide-react";
+const SignUp: React.FC = () => {
+  const [email, setEmail] = React.useState<string>("");
+  const [password, setPassword] = React.useState<string>("");
   const { login } = useAuth();
-
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-
-  const handleLogin = async (e?: React.FormEvent) => {
-    if (e) {
-      e.preventDefault();
-    }
-    if (!email || !password) {
-      return;
-    }
-    await login(email, password);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    login(email, password);
+    // Handle sign-up logic here
   };
   return (
-    <>
-      <StyledWrapper>
-        <div className="flex flex-col items-center justify-center min-h-screen ">
-          <div className="form-container">
-            <p className="title">Welcome back</p>
-            <form className="form" onSubmit={handleLogin}>
-              <input
-                type="email"
-                className="input"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <input
-                type="password"
-                className="input"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <p className="page-link">
-                <span className="page-link-label">Forgot Password?</span>
-              </p>
-              <button type="submit" className="form-btn">
-                Log in
-              </button>
-            </form>
-            <Link to="/signup" className="sign-up-label">
-              Don't have an account?
-              <span className="sign-up-link">Sign up</span>
-            </Link>
-            <div className="buttons-container">
-              <div className="google-login-button">
-                <svg
-                  stroke="currentColor"
-                  fill="currentColor"
-                  strokeWidth={0}
-                  version="1.1"
-                  x="0px"
-                  y="0px"
-                  className="google-icon"
-                  viewBox="0 0 48 48"
-                  height="1em"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill="#FFC107"
-                    d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12
-      	c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24
-      	c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
-                  />
-                  <path
-                    fill="#FF3D00"
-                    d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657
-      	C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
-                  />
-                  <path
-                    fill="#4CAF50"
-                    d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36
-      	c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
-                  />
-                  <path
-                    fill="#1976D2"
-                    d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571
-      	c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
-                  />
-                </svg>
-                <span>Log in with Google</span>
+    <StyledWrapper>
+      <div className="flex flex-col items-center justify-center min-h-screen ">
+        <form className="modern-form" onSubmit={handleSubmit}>
+          <div className="form-title">Login</div>
+          <div className="form-body">
+            <div className="input-group"></div>
+            <div className="input-group">
+              <div className="input-wrapper">
+                <Mail className="input-icon" />
+                <input
+                  required
+                  placeholder="Email"
+                  className="form-input"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="input-group">
+              <div className="input-wrapper">
+                <LockKeyhole className="input-icon" />
+                <input
+                  required
+                  placeholder="Password"
+                  className="form-input"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button className="password-toggle" type="button">
+                  <Eye className="eye-icon" />
+                </button>
               </div>
             </div>
           </div>
-        </div>
-      </StyledWrapper>
-    </>
+          <button
+            className="submit-button flex justify-center items-center"
+            type="submit"
+          >
+            <span className="button-text ">Login</span>
+
+            <div className="button-glow" />
+          </button>
+          <div className="form-footer gap-y-1">
+            <button className="google-button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="xMidYMid"
+                viewBox="0 0 256 262"
+              >
+                <path
+                  fill="#4285F4"
+                  d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"
+                ></path>
+                <path
+                  fill="#34A853"
+                  d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"
+                ></path>
+                <path
+                  fill="#FBBC05"
+                  d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782"
+                ></path>
+                <path
+                  fill="#EB4335"
+                  d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
+                ></path>
+              </svg>
+              Continue with Google
+            </button>
+            <div className="mt-10">
+              <Link className="login-link " to="/signup">
+                Don't have an account? <span>Signup</span>
+              </Link>
+            </div>
+          </div>
+        </form>
+      </div>
+    </StyledWrapper>
   );
 };
 
-const StyledWrapper = styled.div`
-  .form-container {
-    width: 350px;
-    height: 500px;
-    background-color: #fff;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    border-radius: 10px;
-    box-sizing: border-box;
-    padding: 20px 30px;
+const StyledWrapper = styled.label`
+  .modern-form {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: rgba(59, 130, 246, 0.1);
+    --success: #10b981;
+    --text-main: #1e293b;
+    --text-secondary: #64748b;
+    --bg-input: #f8fafc;
+
+    position: relative;
+    width: 300px;
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -2px rgba(0, 0, 0, 0.05),
+      inset 0 0 0 1px rgba(148, 163, 184, 0.1);
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
 
-  .title {
+  .form-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin: 0 0 24px;
     text-align: center;
-    font-family:
-      "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-    margin: 10px 0 30px 0;
-    font-size: 28px;
-    font-weight: 800;
+    letter-spacing: -0.01em;
   }
 
-  .form {
-    width: 100%;
+  .input-group {
+    margin-bottom: 16px;
+  }
+
+  .input-wrapper {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    gap: 18px;
-    margin-bottom: 15px;
+    align-items: center;
   }
 
-  .input {
-    border-radius: 20px;
-    border: 1px solid #c0c0c0;
-    outline: 0 !important;
-    box-sizing: border-box;
-    padding: 12px 15px;
+  .form-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 36px;
+    font-size: 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: var(--bg-input);
+    color: var(--text-main);
+    transition: all 0.2s ease;
   }
 
-  .page-link {
-    text-decoration: underline;
-    margin: 0;
-    text-align: end;
-    color: #747474;
-    text-decoration-color: #747474;
+  .form-input::placeholder {
+    color: var(--text-secondary);
   }
 
-  .page-link-label {
+  .input-icon {
+    position: absolute;
+    left: 12px;
+    width: 16px;
+    height: 16px;
+    color: var(--text-secondary);
+    pointer-events: none;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
     cursor: pointer;
-    font-family:
-      "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-    font-size: 9px;
-    font-weight: 700;
+    transition: all 0.2s ease;
   }
 
-  .page-link-label:hover {
-    color: #000;
+  .eye-icon {
+    width: 16px;
+    height: 16px;
   }
 
-  .form-btn {
-    padding: 10px 15px;
-    font-family:
-      "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-    border-radius: 20px;
-    border: 0 !important;
-    outline: 0 !important;
-    background: teal;
+  .submit-button {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    margin-top: 8px;
+    background: var(--primary);
     color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    overflow: hidden;
+    transition: all 0.2s ease;
   }
 
-  .form-btn:active {
+  .button-glow {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+  }
+
+  .form-footer {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 13px;
+  }
+
+  .login-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .login-link span {
+    color: var(--primary);
+    font-weight: 500;
+  }
+
+  /* Hover & Focus States */
+  .form-input:hover {
+    border-color: #cbd5e1;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 4px var(--primary-light);
+  }
+
+  .password-toggle:hover {
+    color: var(--primary);
+    transform: scale(1.1);
+  }
+
+  .submit-button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow:
+      0 4px 12px rgba(59, 130, 246, 0.25),
+      0 2px 4px rgba(59, 130, 246, 0.15);
+  }
+
+  .submit-button:hover .button-glow {
+    transform: translateX(100%);
+  }
+
+  .login-link:hover {
+    color: var(--text-main);
+  }
+
+  .login-link:hover span {
+    color: var(--primary-dark);
+  }
+
+  /* Active States */
+  .submit-button:active {
+    transform: translateY(0);
     box-shadow: none;
   }
 
-  .sign-up-label {
-    margin: 0;
-    font-size: 10px;
-    color: #747474;
-    font-family:
-      "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  .password-toggle:active {
+    transform: scale(0.9);
   }
 
-  .sign-up-link {
-    margin-left: 1px;
-    font-size: 11px;
-    text-decoration: underline;
-    text-decoration-color: teal;
-    color: teal;
-    cursor: pointer;
-    font-weight: 800;
-    font-family:
-      "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  /* Validation States */
+  .form-input:not(:placeholder-shown):valid {
+    border-color: var(--success);
   }
 
-  .buttons-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    margin-top: 20px;
-    gap: 15px;
+  .form-input:not(:placeholder-shown):valid ~ .input-icon {
+    color: var(--success);
   }
 
-  .apple-login-button,
-  .google-login-button {
-    border-radius: 20px;
-    box-sizing: border-box;
-    padding: 10px 15px;
-    box-shadow:
-      rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
-      rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family:
-      "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-    font-size: 11px;
-    gap: 5px;
+  /* Animation */
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-4px);
+    }
+    75% {
+      transform: translateX(4px);
+    }
   }
 
-  .apple-login-button {
-    background-color: #000;
-    color: #fff;
-    border: 2px solid #000;
+  .form-input:not(:placeholder-shown):invalid {
+    border-color: #ef4444;
+    animation: shake 0.2s ease-in-out;
   }
 
-  .google-login-button {
-    border: 2px solid #747474;
-  }
-
-  .apple-icon,
-  .google-icon {
-    font-size: 18px;
-    margin-bottom: 1px;
+  .form-input:not(:placeholder-shown):invalid ~ .input-icon {
+    color: #ef4444;
   }
 `;
 
-export default Login;
+export default SignUp;

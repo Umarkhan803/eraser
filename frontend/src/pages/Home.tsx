@@ -1,20 +1,17 @@
 import { Link } from "react-router-dom";
+import Button from "../components/buttons/Button";
 
 const Home: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen ">
       <h1 className="text-4xl font-bold mb-8">Welcome to Eraser</h1>
       <p className="text-lg mb-8">A collaborative drawing tool</p>
-      <div className="space-x-4 gap-3">
+      <div className=" flex  space-x-4 gap-3">
         <Link to="/login">
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Login
-          </button>
+          <Button text="Login" />
         </Link>
         <Link to="/signup">
-          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-            Sign Up
-          </button>
+          <Button text="Signup" />
         </Link>
       </div>
     </div>

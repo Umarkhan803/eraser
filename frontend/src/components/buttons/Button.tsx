@@ -1,16 +1,18 @@
 import styled from "styled-components";
-
-const Button = () => {
+interface ButtonProps {
+  text: string;
+}
+const Button = ({ text }: ButtonProps) => {
   return (
     <StyledWrapper>
-      <button className="boton-elegante">Explore</button>
+      <button className="boton-elegante">{text}</button>
     </StyledWrapper>
   );
 };
 
 const StyledWrapper = styled.div`
   .boton-elegante {
-    padding: 15px 30px;
+    padding: 10px 15px;
     border: 2px solid #2c2c2c;
     background-color: #1a1a1a;
     color: #ffffff;

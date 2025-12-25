@@ -15,7 +15,7 @@ const PrivetRoute: React.FC = () => {
   }
 
   return (
-    <div className="page-container">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-700">
       <Outlet />
     </div>
   );
