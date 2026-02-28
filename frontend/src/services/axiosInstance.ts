@@ -16,7 +16,7 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Add response interceptor to handle errors and token storage
@@ -32,10 +32,12 @@ axiosInstance.interceptors.response.use(
     // Handle 401 errors (unauthorized)
     if (error.response?.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/login";
+      // Dispatch a custom event instead of doing a hard redirect
+      // This allows the auth context to handle the redirect gracefully
+      window.dispatchEvent(new CustomEvent("unauthorized"));
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

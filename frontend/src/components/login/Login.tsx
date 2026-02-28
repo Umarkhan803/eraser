@@ -6,12 +6,12 @@ import { Link } from "react-router-dom";
 import { Eye, LockKeyhole, LogIn, Mail } from "lucide-react";
 const SignUp: React.FC = () => {
   const [email, setEmail] = React.useState<string>("");
+  const [message, setMessage] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const { login } = useAuth();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     login(email, password);
-    // Handle sign-up logic here
   };
   return (
     <StyledWrapper>
@@ -85,7 +85,7 @@ const SignUp: React.FC = () => {
               Continue with Google
             </button>
             <div className="mt-10">
-              <Link className="login-link " to="/signup">
+              <Link className="login-link pt-10 " to="/signup">
                 Don't have an account? <span>Signup</span>
               </Link>
             </div>

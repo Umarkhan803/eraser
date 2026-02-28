@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(
       null,
-      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname),
     );
   },
 });
@@ -27,7 +27,7 @@ const fileFilter = (req, file, cb) => {
   // Allowed file types
   const allowedTypes = /jpeg|jpg|png|gif|svg|pdf/;
   const extname = allowedTypes.test(
-    path.extname(file.originalname).toLowerCase()
+    path.extname(file.originalname).toLowerCase(),
   );
   const mimetype = allowedTypes.test(file.mimetype);
 
@@ -36,8 +36,8 @@ const fileFilter = (req, file, cb) => {
   } else {
     cb(
       new Error(
-        "Invalid file type. Only JPEG, PNG, GIF, SVG, and PDF are allowed."
-      )
+        "Invalid file type. Only JPEG, PNG, GIF, SVG, and PDF are allowed.",
+      ),
     );
   }
 };
@@ -58,19 +58,22 @@ const handleMulterError = (err, req, res, next) => {
       return res.status(400).json({
         success: false,
         message: "File size is too large. Maximum size is 5MB.",
+        resMessafe: "this function name is handleMulterError",
       });
     }
     return res.status(400).json({
       success: false,
       message: err.message,
+      resMessafe: "this function name is handleMulterError",
     });
   } else if (err) {
     return res.status(400).json({
       success: false,
       message: err.message,
+      resMessafe: "this function name is handleMulterError",
     });
   }
-  next();
+  return next();
 };
 
 module.exports = upload;

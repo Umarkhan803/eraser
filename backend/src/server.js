@@ -63,7 +63,7 @@ app.use(
       },
     },
     crossOriginEmbedderPolicy: false,
-  })
+  }),
 );
 
 // CORS Middleware
@@ -72,6 +72,72 @@ app.use(corsMiddleware);
 // Body Parser Middleware
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
+// Response enhancer middleware – automatically add `resMessafe` for
+// any JSON response with `success: false`. The value is derived from
+// the calling function name via the stack trace.
+app.use((req, res, next) => {
+  const originalJson = res.json.bind(res);
+  res.json = (body) => {
+    if (body && body.success === false) {
+      // attempt to figure out which function sent this response
+      let fnName = "unknown";
+      const stack = new Error().stack || "";
+      const lines = stack.split("\n");
+      for (let i = 2; i < lines.length; i++) {
+        const line = lines[i];
+        // skip over internal express / this middleware lines
+        if (
+          line.includes("server.js") ||
+          line.includes("(node:") ||
+          line.includes("node_modules")
+        ) {
+          continue;
+        }
+        const m = line.match(/at\s+([^\s]+)\s*/);
+        if (m && m[1]) {
+          // drop any object/namespace qualifiers (foo.bar -> bar)
+          const parts = m[1].split(".");
+          fnName = parts[parts.length - 1];
+          break;
+        }
+      }
+      body.resMessafe = `this function name is ${fnName}`;
+    }
+    return originalJson(body);
+  };
+
+  // also intercept send in case other middleware uses it directly
+  const originalSend = res.send.bind(res);
+  res.send = (payload) => {
+    if (payload && typeof payload === "object" && payload.success === false) {
+      let fnName = req.handlerName || "unknown";
+      if (fnName === "unknown") {
+        const stack = new Error().stack || "";
+        const lines = stack.split("\n");
+        for (let i = 2; i < lines.length; i++) {
+          const line = lines[i];
+          if (
+            line.includes("server.js") ||
+            line.includes("(node:") ||
+            line.includes("node_modules")
+          )
+            continue;
+          const m = line.match(/at\s+([^\s]+)\s*/);
+          if (m && m[1]) {
+            const parts = m[1].split(".");
+            fnName = parts[parts.length - 1];
+            break;
+          }
+        }
+      }
+      payload.resMessafe = `this function name is ${fnName}`;
+    }
+    return originalSend(payload);
+  };
+
+  next();
+});
 
 // Cookie Parser Middleware
 app.use(cookieParser());
@@ -165,7 +231,7 @@ io.on(EVENTS.CONNECTION, (socket) => {
   // Handle disconnection
   socket.on(EVENTS.DISCONNECT, (reason) => {
     logger.info(
-      `User disconnected: ${userName} (${userId}) - Reason: ${reason}`
+      `User disconnected: ${userName} (${userId}) - Reason: ${reason}`,
     );
   });
 });
@@ -187,6 +253,7 @@ app.use((req, res) => {
     message: "Route not found",
     path: req.url,
     method: req.method,
+    resMessafe: "this function name is 404Handler",
   });
 });
 
@@ -249,30 +316,32 @@ if (process.env.NODE_ENV === "production") {
   const canvasService = require("./services/canvasService");
   const notificationService = require("./services/notificationService");
 
-  setInterval(async () => {
-    try {
-      logger.info("Running periodic cleanup tasks...");
+  setInterval(
+    async () => {
+      try {
+        logger.info("Running periodic cleanup tasks...");
 
-      // Clean up old files (older than 30 days)
-      await storageService.cleanupOldFiles(30);
+        // Clean up old files (older than 30 days)
+        await storageService.cleanupOldFiles(30);
 
-      // Clean up old notifications (older than 30 days)
-      const deletedCount = await notificationService.cleanupOldNotifications(
-        30
-      );
-      logger.info(`Cleaned up ${deletedCount} old notifications`);
+        // Clean up old notifications (older than 30 days)
+        const deletedCount =
+          await notificationService.cleanupOldNotifications(30);
+        logger.info(`Cleaned up ${deletedCount} old notifications`);
 
-      // Get storage stats
-      const stats = await storageService.getStorageStats();
-      logger.info(
-        `Storage stats: ${stats.fileCount} files, ${stats.totalSizeMB} MB`
-      );
+        // Get storage stats
+        const stats = await storageService.getStorageStats();
+        logger.info(
+          `Storage stats: ${stats.fileCount} files, ${stats.totalSizeMB} MB`,
+        );
 
-      logger.info("Periodic cleanup tasks completed");
-    } catch (error) {
-      logger.error("Error running cleanup tasks:", error);
-    }
-  }, 60 * 60 * 1000); // Run every hour
+        logger.info("Periodic cleanup tasks completed");
+      } catch (error) {
+        logger.error("Error running cleanup tasks:", error);
+      }
+    },
+    60 * 60 * 1000,
+  ); // Run every hour
 }
 
 // Export for testing

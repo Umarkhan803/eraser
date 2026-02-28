@@ -38,7 +38,7 @@ export const updatePassword = (data: {
 }) => {
   return axiosInstance.put<ApiResponse<void>>(
     "/api/auth/update-password",
-    data
+    data,
   );
 };
 
@@ -76,13 +76,13 @@ export const deleteProject = (id: string) => {
 
 export const duplicateProject = (id: string) => {
   return axiosInstance.post<ApiResponse<Project>>(
-    `/api/projects/${id}/duplicate`
+    `/api/projects/${id}/duplicate`,
   );
 };
 
 export const toggleFavorite = (id: string) => {
   return axiosInstance.put<ApiResponse<Project>>(
-    `/api/projects/${id}/favorite`
+    `/api/projects/${id}/favorite`,
   );
 };
 
@@ -102,7 +102,7 @@ export const updateCanvas = (id: string, data: Partial<Canvas>) => {
 export const saveCanvasVersion = (id: string, action?: string) => {
   return axiosInstance.post<ApiResponse<Canvas>>(
     `/api/canvas/${id}/save-version`,
-    { action }
+    { action },
   );
 };
 
@@ -112,7 +112,7 @@ export const getCanvasHistory = (id: string) => {
 
 export const restoreCanvasVersion = (id: string, versionId: string) => {
   return axiosInstance.put<ApiResponse<Canvas>>(
-    `/api/canvas/${id}/restore/${versionId}`
+    `/api/canvas/${id}/restore/${versionId}`,
   );
 };
 
@@ -124,76 +124,76 @@ export const exportCanvas = (id: string, format: string = "json") => {
 
 export const updateCanvasSettings = (
   id: string,
-  settings: { gridEnabled?: boolean; snapToGrid?: boolean; gridSize?: number }
+  settings: { gridEnabled?: boolean; snapToGrid?: boolean; gridSize?: number },
 ) => {
   return axiosInstance.put<ApiResponse<Canvas>>(
     `/api/canvas/${id}/settings`,
-    settings
+    settings,
   );
 };
 
 // ==================== COLLABORATION API ====================
 export const inviteCollaborator = (
   projectId: string,
-  data: { email: string; permission?: string }
+  data: { email: string; permission?: string },
 ) => {
   return axiosInstance.post<ApiResponse<Project>>(
     `/api/collaboration/${projectId}/invite`,
-    data
+    data,
   );
 };
 
 export const getCollaborators = (projectId: string) => {
   return axiosInstance.get<ApiResponse<any>>(
-    `/api/collaboration/${projectId}/collaborators`
+    `/api/collaboration/${projectId}/collaborators`,
   );
 };
 
 export const updateCollaboratorPermission = (
   projectId: string,
   userId: string,
-  permission: string
+  permission: string,
 ) => {
   return axiosInstance.put<ApiResponse<Project>>(
     `/api/collaboration/${projectId}/collaborators/${userId}`,
-    { permission }
+    { permission },
   );
 };
 
 export const removeCollaborator = (projectId: string, userId: string) => {
   return axiosInstance.delete<ApiResponse<void>>(
-    `/api/collaboration/${projectId}/collaborators/${userId}`
+    `/api/collaboration/${projectId}/collaborators/${userId}`,
   );
 };
 
 export const getPendingInvitations = () => {
   return axiosInstance.get<ApiResponse<any[]>>(
-    "/api/collaboration/invitations/pending"
+    "/api/collaboration/invitations/pending",
   );
 };
 
 export const acceptInvitation = (invitationId: string) => {
   return axiosInstance.post<ApiResponse<void>>(
-    `/api/collaboration/invitations/${invitationId}/accept`
+    `/api/collaboration/invitations/${invitationId}/accept`,
   );
 };
 
 export const rejectInvitation = (invitationId: string) => {
   return axiosInstance.post<ApiResponse<void>>(
-    `/api/collaboration/invitations/${invitationId}/reject`
+    `/api/collaboration/invitations/${invitationId}/reject`,
   );
 };
 
 export const leaveProject = (projectId: string) => {
   return axiosInstance.post<ApiResponse<void>>(
-    `/api/collaboration/${projectId}/leave`
+    `/api/collaboration/${projectId}/leave`,
   );
 };
 
 // ==================== COMMENT API ====================
 export const getComments = (canvasId: string) => {
   return axiosInstance.get<ApiResponse<Comment[]>>(
-    `/api/comments/canvas/${canvasId}`
+    `/api/comments/canvas/${canvasId}`,
   );
 };
 
@@ -203,11 +203,11 @@ export const createComment = (
     content: string;
     position: { x: number; y: number };
     objectId?: string;
-  }
+  },
 ) => {
   return axiosInstance.post<ApiResponse<Comment>>(
     `/api/comments/canvas/${canvasId}`,
-    data
+    data,
   );
 };
 
@@ -222,13 +222,13 @@ export const deleteComment = (id: string) => {
 export const addReply = (id: string, content: string) => {
   return axiosInstance.post<ApiResponse<Comment>>(
     `/api/comments/${id}/replies`,
-    { content }
+    { content },
   );
 };
 
 export const deleteReply = (id: string, replyId: string) => {
   return axiosInstance.delete<ApiResponse<void>>(
-    `/api/comments/${id}/replies/${replyId}`
+    `/api/comments/${id}/replies/${replyId}`,
   );
 };
 
@@ -239,13 +239,13 @@ export const resolveComment = (id: string) => {
 export const addReaction = (id: string, emoji: string) => {
   return axiosInstance.post<ApiResponse<Comment>>(
     `/api/comments/${id}/reactions`,
-    { emoji }
+    { emoji },
   );
 };
 
 export const removeReaction = (id: string, emoji: string) => {
   return axiosInstance.delete<ApiResponse<void>>(
-    `/api/comments/${id}/reactions/${emoji}`
+    `/api/comments/${id}/reactions/${emoji}`,
   );
 };
 
@@ -283,7 +283,7 @@ export const useTemplate = (id: string) => {
 
 export const getTemplatesByCategory = (category: string) => {
   return axiosInstance.get<ApiResponse<any[]>>(
-    `/api/templates/category/${category}`
+    `/api/templates/category/${category}`,
   );
 };
 
@@ -300,7 +300,7 @@ export const getNotifications = (params?: {
 
 export const getUnreadCount = () => {
   return axiosInstance.get<ApiResponse<number>>(
-    "/api/notifications/unread-count"
+    "/api/notifications/unread-count",
   );
 };
 

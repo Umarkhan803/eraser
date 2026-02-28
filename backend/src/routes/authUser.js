@@ -12,10 +12,15 @@ const {
   verifyEmail,
 } = require("../controllers/authController");
 const { protect } = require("../middleware/authMiddleware");
+const {
+  loginValidation,
+  registerValidation,
+  validate,
+} = require("../middleware/validation");
 
 // Public routes
-router.post("/register", register);
-router.post("/login", login);
+router.post("/register", ...registerValidation, validate, register);
+router.post("/login", ...loginValidation, validate, login);
 router.post("/forgot-password", forgotPassword);
 router.put("/reset-password/:resetToken", resetPassword);
 router.get("/verify-email/:token", verifyEmail);

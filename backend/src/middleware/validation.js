@@ -9,8 +9,9 @@ exports.validate = (req, res, next) => {
       success: false,
       errors: errors.array().map((error) => ({
         field: error.param,
-        message: error.msg,
+        message: "this is the error message: " + error.msg,
       })),
+      resMessafe: "this function name is validate",
     });
   }
   next();

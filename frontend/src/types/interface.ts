@@ -18,6 +18,7 @@ export interface ApiResponse<T> {
   message: string;
   data: T;
   errors?: string[];
+  user?: User;
   pagination?: {
     page: number;
     limit: number;

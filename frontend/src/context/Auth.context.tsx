@@ -74,7 +74,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
+    // Handle unauthorized events from axios interceptor
+    const handleUnauthorized = () => {
+      logout();
+    };
+
+    window.addEventListener("unauthorized", handleUnauthorized);
+
     checkAuth();
+
+    return () => {
+      window.removeEventListener("unauthorized", handleUnauthorized);
+    };
   }, []);
 
   // Define sign up and logout methods here to match AuthContextType requirements
@@ -87,10 +98,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (response.data.success) {
         // Token is stored by axiosInstance interceptor
-        setUser(response.data.data);
-        setIsAuthenticated(true);
-        hasCheckedAuth.current = true; // Mark as checked
-        toast.success(response.data.message || "Sign up successful");
+        // Use user data from signup response
+        if (response.data?.user || response.data.data) {
+          setUser(response.data.user || response.data.data);
+          setIsAuthenticated(true);
+          hasCheckedAuth.current = true; // Mark as checked
+          toast.success(response.data.message || "Sign up successful");
+        }
       } else {
         toast.error(response.data.message || "Sign up failed");
         setIsAuthenticated(false);
@@ -114,13 +128,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (response.data.success) {
         // Token is stored by axiosInstance interceptor
-        // After successful login, get user data
-        const meResponse = await getMe();
-        if (meResponse.data.success) {
-          setUser(meResponse.data.data);
+        // Use user data from login response instead of calling getMe()
+        if (response.data?.user || response.data.data) {
+          setUser(response.data?.user || response.data.data);
           setIsAuthenticated(true);
           hasCheckedAuth.current = true; // Mark as checked
           toast.success(response.data.message || "Login successful");
+        } else {
+          // If no user data in response, fetch it
+          const meResponse = await getMe();
+          if (meResponse.data.success) {
+            setUser(meResponse.data.data);
+            setIsAuthenticated(true);
+            hasCheckedAuth.current = true;
+            toast.success(response.data.message || "Login successful");
+          }
         }
       } else {
         toast.error(response.data.message || "Login failed");

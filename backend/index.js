@@ -63,7 +63,7 @@ app.use(
       },
     },
     crossOriginEmbedderPolicy: false,
-  })
+  }),
 );
 
 // CORS Middleware
@@ -153,7 +153,7 @@ const bindSocketHandlers = (ioInstance) => {
     const userName = socket.user?.name;
 
     logger.info(
-      `User connected: ${userName} (${userId}) - Socket: ${socket.id}`
+      `User connected: ${userName} (${userId}) - Socket: ${socket.id}`,
     );
 
     // Initialize socket handlers
@@ -167,7 +167,7 @@ const bindSocketHandlers = (ioInstance) => {
     // Handle disconnection
     socket.on(EVENTS.DISCONNECT, (reason) => {
       logger.info(
-        `User disconnected: ${userName} (${userId}) - Reason: ${reason}`
+        `User disconnected: ${userName} (${userId}) - Reason: ${reason}`,
       );
     });
   });
@@ -257,30 +257,32 @@ if (process.env.NODE_ENV === "production") {
   const canvasService = require("./src/services/canvasService");
   const notificationService = require("./src/services/notificationService");
 
-  setInterval(async () => {
-    try {
-      logger.info("Running periodic cleanup tasks...");
+  setInterval(
+    async () => {
+      try {
+        logger.info("Running periodic cleanup tasks...");
 
-      // Clean up old files (older than 30 days)
-      await storageService.cleanupOldFiles(30);
+        // Clean up old files (older than 30 days)
+        await storageService.cleanupOldFiles(30);
 
-      // Clean up old notifications (older than 30 days)
-      const deletedCount = await notificationService.cleanupOldNotifications(
-        30
-      );
-      logger.info(`Cleaned up ${deletedCount} old notifications`);
+        // Clean up old notifications (older than 30 days)
+        const deletedCount =
+          await notificationService.cleanupOldNotifications(30);
+        logger.info(`Cleaned up ${deletedCount} old notifications`);
 
-      // Get storage stats
-      const stats = await storageService.getStorageStats();
-      logger.info(
-        `Storage stats: ${stats.fileCount} files, ${stats.totalSizeMB} MB`
-      );
+        // Get storage stats
+        const stats = await storageService.getStorageStats();
+        logger.info(
+          `Storage stats: ${stats.fileCount} files, ${stats.totalSizeMB} MB`,
+        );
 
-      logger.info("Periodic cleanup tasks completed");
-    } catch (error) {
-      logger.error("Error running cleanup tasks:", error);
-    }
-  }, 60 * 60 * 1000); // Run every hour
+        logger.info("Periodic cleanup tasks completed");
+      } catch (error) {
+        logger.error("Error running cleanup tasks:", error);
+      }
+    },
+    60 * 60 * 1000,
+  ); // Run every hour
 }
 
 // Export for testing

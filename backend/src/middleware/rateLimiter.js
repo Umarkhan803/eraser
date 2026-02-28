@@ -7,6 +7,7 @@ exports.apiLimiter = rateLimit({
   message: {
     success: false,
     message: "Too many requests from this IP, please try again later.",
+    resMessafe: "this function name is apiLimiter",
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -19,6 +20,7 @@ exports.authLimiter = rateLimit({
   message: {
     success: false,
     message: "Too many authentication attempts, please try again later.",
+    resMessafe: "this function name is authLimiter",
   },
   skipSuccessfulRequests: true,
 });
@@ -30,6 +32,7 @@ exports.canvasLimiter = rateLimit({
   message: {
     success: false,
     message: "Too many canvas updates, please slow down.",
+    resMessafe: "this function name is canvasLimiter",
   },
 });
 
@@ -40,5 +43,6 @@ exports.uploadLimiter = rateLimit({
   message: {
     success: false,
     message: "Too many file uploads, please try again later.",
+    resMessafe: "this function name is uploadLimiter",
   },
 });
