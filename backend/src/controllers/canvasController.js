@@ -2,6 +2,25 @@ const Canvas = require("../models/Canvas");
 const Project = require("../models/Project");
 const asyncHandler = require("../middleware/asyncHandler");
 
+// @desc    Create a new standalone canvas
+// @route   POST /api/canvas
+// @access  Private
+exports.createCanvas = asyncHandler(async (req, res, next) => {
+  // project reference can be supplied optionally
+  const { projectId } = req.body;
+  const canvasData = {
+    project: projectId || null,
+    objects: [],
+    background: "#ffffff",
+  };
+
+  const canvas = await Canvas.create(canvasData);
+  res.status(201).json({
+    success: true,
+    data: canvas,
+  });
+});
+
 // @desc    Get canvas by ID
 // @route   GET /api/canvas/:id
 // @access  Private

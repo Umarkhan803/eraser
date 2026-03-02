@@ -14,6 +14,9 @@ const { protect } = require("../middleware/authMiddleware");
 // All routes require authentication
 router.use(protect);
 
+// Canvas creation
+router.route("/").post(createCanvas);
+
 // Canvas operations
 router.route("/:id").get(getCanvas).put(updateCanvas);
 

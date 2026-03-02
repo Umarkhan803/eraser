@@ -39,3 +39,18 @@
 .google-button:hover {
     transform: scale(1.02);
 }
+
+/* ag grid */
+.ag-theme-alpine .ag-header-cell {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 2px solid #d1d5db;
+}
+
+/* Optional: remove last extra border */
+.ag-theme-alpine .ag-header-cell:last-child {
+    border-right: none;
+
+}

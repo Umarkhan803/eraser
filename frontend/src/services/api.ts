@@ -91,6 +91,10 @@ export const getSharedProjects = () => {
 };
 
 // ==================== CANVAS API ====================
+export const createCanvas = (data?: Partial<Canvas>) => {
+  return axiosInstance.post<ApiResponse<Canvas>>(`/api/canvas`, data || {});
+};
+
 export const getCanvas = (id: string) => {
   return axiosInstance.get<ApiResponse<Canvas>>(`/api/canvas/${id}`);
 };
