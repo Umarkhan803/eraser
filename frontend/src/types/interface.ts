@@ -53,7 +53,7 @@ export interface Collaborator {
 
 export interface Canvas {
   id: string;
-  project: string | Project;
+  project?: string | Project | "untitled";
   objects: any[];
   background: string;
   width: number;

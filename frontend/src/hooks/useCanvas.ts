@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import fabric from "fabric";
+import * as fabric from "fabric";
 import { getCanvas, updateCanvas } from "../services/api";
 import websocketService from "../services/websocket";
 import type { Canvas } from "../types/Interface";
@@ -136,11 +136,11 @@ export const useCanvas = ({ canvasId, userId, onUpdate }: UseCanvasOptions) => {
         canvasId,
         objects.objects,
         userId,
-        action
+        action,
       );
       onUpdate?.(objects.objects);
     },
-    [fabricCanvas, canvasId, userId, onUpdate]
+    [fabricCanvas, canvasId, userId, onUpdate],
   );
 
   // Add object to canvas
@@ -155,11 +155,11 @@ export const useCanvas = ({ canvasId, userId, onUpdate }: UseCanvasOptions) => {
       websocketService.sendObjectAdded(
         canvasId,
         object.toObject(["id"]),
-        userId
+        userId,
       );
       sendCanvasUpdate("add");
     },
-    [fabricCanvas, canvasId, userId, sendCanvasUpdate]
+    [fabricCanvas, canvasId, userId, sendCanvasUpdate],
   );
 
   // Delete selected object
@@ -191,12 +191,12 @@ export const useCanvas = ({ canvasId, userId, onUpdate }: UseCanvasOptions) => {
           canvasId,
           objectId,
           properties,
-          userId
+          userId,
         );
         sendCanvasUpdate("update");
       }
     },
-    [fabricCanvas, canvasId, userId, sendCanvasUpdate]
+    [fabricCanvas, canvasId, userId, sendCanvasUpdate],
   );
 
   // Undo/Redo (basic implementation)
@@ -223,7 +223,7 @@ export const useCanvas = ({ canvasId, userId, onUpdate }: UseCanvasOptions) => {
       }
       return null;
     },
-    [fabricCanvas]
+    [fabricCanvas],
   );
 
   return {

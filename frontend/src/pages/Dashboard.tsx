@@ -15,9 +15,22 @@ const Dashboard: React.FC = () => {
 
   // column definitions
   const [colDefs] = useState<any>([
-    { field: "title", headerName: "Name", filter: false },
-    { field: "createdAt", headerName: "Created", filter: false },
-    { field: "updatedAt", headerName: "Edited", filter: false },
+    {
+      field: "title",
+      headerName: "Name",
+    },
+    {
+      field: "createdAt",
+      headerName: "Created",
+      headerClass: "center-header",
+      cellClass: "center-cell",
+    },
+    {
+      field: "updatedAt",
+      headerName: "Edited",
+      headerClass: "center-header",
+      cellClass: "center-cell",
+    },
   ]);
 
   const defaultColDef = {

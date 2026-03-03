@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { Circle, Rect, Textbox } from "fabric";
+// import { Circle, Rect, Textbox } from "fabric";
 import { useCanvasContext } from "../../context/CanvasContext";
-// import * as fabric from "fabric";
+import * as fabric from "fabric";
 
 const Canvas: React.FC = () => {
   const {
@@ -31,7 +31,7 @@ const Canvas: React.FC = () => {
   }, [fabricCanvas, saveCanvas]);
 
   const addRectangle = () => {
-    const rect = new Rect({
+    const rect = new fabric.Rect({
       width: 100,
       height: 60,
       fill: "#ff5722",
@@ -43,7 +43,7 @@ const Canvas: React.FC = () => {
   };
 
   const addCircle = () => {
-    const circle = new Circle({
+    const circle = new fabric.Circle({
       radius: 50,
       fill: "#2196f3",
       left: 100,
@@ -54,7 +54,7 @@ const Canvas: React.FC = () => {
   };
 
   const addText = () => {
-    const text = new Textbox("Hello", {
+    const text = new fabric.Textbox("Hello", {
       left: 150,
       top: 150,
       fontSize: 20,
