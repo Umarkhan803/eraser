@@ -8,6 +8,7 @@ const {
   restoreCanvasVersion,
   exportCanvas,
   updateCanvasSettings,
+  createCanvas,
 } = require("../controllers/canvasController");
 const { protect } = require("../middleware/authMiddleware");
 

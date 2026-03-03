@@ -5,7 +5,7 @@ const canvasSchema = new mongoose.Schema(
     project: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
-      required: true,
+      required: false,
     },
     objects: {
       type: mongoose.Schema.Types.Mixed,
@@ -96,7 +96,7 @@ const canvasSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Limit history to last 50 entries
@@ -104,7 +104,6 @@ canvasSchema.pre("save", function (next) {
   if (this.history.length > 50) {
     this.history = this.history.slice(-50);
   }
-  next();
 });
 
 module.exports = mongoose.model("Canvas", canvasSchema);
